@@ -107,9 +107,18 @@ void test6()
 	MyString s1("hello");
 	cin >> s1;
 	cout << s1.capacity() << endl;
+	MyString s2(s1);
+	cout << s2 << endl;
 }
 int main()
 {
-	test6();
+	//test6();
+
+	std::string s1("11111");
+	cout << sizeof(s1) << endl;
+	MyString s2("11111");
+	cout << sizeof(s2) << endl;
+	size_t a = 0;
+	cout << sizeof(a) << endl;
 	return 0;
 }

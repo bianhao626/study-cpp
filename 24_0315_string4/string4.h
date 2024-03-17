@@ -48,21 +48,28 @@ namespace kuto
 		MyString(const MyString& s)
 		{
 			//不存在的对象
-			_str = new char[s._capacity + 1];
+			/*_str = new char[s._capacity + 1];
 			strcpy(_str, s._str);
 			_size = s._size;
-			_capacity = s._capacity;
+			_capacity = s._capacity;*/
+
+			MyString tmp(s._str);
+			swap(tmp);
 		}
 		//s1 = s2赋值重载
 		MyString& operator=(const MyString& s)
 		{
 			//已经存在的对象
-			char* tmp = new char[s._capacity + 1];
+			/*char* tmp = new char[s._capacity + 1];
 			strcpy(tmp, s._str);
 			delete[] _str;
 			_str = tmp;
 			_size = s._size;
 			_capacity = s._capacity;
+			return *this;*/
+
+			MyString tmp(s);
+			swap(tmp);
 			return *this;
 		}
 
