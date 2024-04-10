@@ -10,7 +10,7 @@ namespace kuto
 	{
 	public:
 		typedef T* iterator;
-		typedef T* const_iterator;
+		typedef const T* const_iterator;
 
 		iterator begin()
 		{
@@ -34,13 +34,26 @@ namespace kuto
 		{}
 		vector(size_t n, const T& value = T())
 		{
-			_start = new T[n];
-			_end = _endCapacity = _start + n;
-			iterator pos = _start;
-			while (pos < _end)
+			//_start = new T[n];
+			//_end = _endCapacity = _start + n;
+			//iterator pos = _start;
+			//while (pos < _end)
+			//{
+			//	*pos = value;
+			//	pos++;
+			//}
+			reserve(n);
+			for (size_t i = 0; i < n; i++)
 			{
-				*pos = value;
-				pos++;
+				push_back(value);
+			}
+		}
+		vector(int n, const T& value = T())
+		{
+			reserve(n);
+			for (int i = 0; i < n; i++)
+			{
+				push_back(value);
 			}
 		}
 		//析构函数
@@ -62,13 +75,15 @@ namespace kuto
 		vector<T>& operator=(vector<T> v)
 		{
 			//开辟临时空间
-			iterator tmp = new T[v.capacity()];
-			memcpy(tmp, v._start, v.size() * sizeof(T));
-			delete[] _start;
-			_start = tmp;
-			_end = tmp + v.size();
-			_endCapacity = tmp + v.capacity();
+			//iterator tmp = new T[v.capacity()];
+			//memcpy(tmp, v._start, v.size() * sizeof(T));
+			//delete[] _start;
+			//_start = tmp;
+			//_end = tmp + v.size();
+			//_endCapacity = tmp + v.capacity();
 
+			
+			swap_vector(v);
 			return *this;
 		}
 
@@ -100,7 +115,7 @@ namespace kuto
 			return _start == _end;
 		}
 		//交换函数模拟实现
-		void swap_vector(vector<T>& v)
+		void swap_vector(vector<T> v)
 		{
 			std::swap(_start, v._start);
 			std::swap(_end, v._end);
@@ -134,7 +149,13 @@ namespace kuto
 				//开辟新的空间，然后把旧的空间的值传递给新空间中，之后删除久空间
 				iterator tmp = new T[n];
 				size_t old_size = size();
-				memcpy(tmp, _start, old_size * sizeof(T));
+				//memcpy(tmp, _start, old_size * sizeof(T));
+				//当对象是string这样的类型的时候，就会出现浅拷贝的问题！！！！
+				//解决方式，改为赋值即可，会调用string的赋值
+				for (size_t i = 0; i < old_size; i++)
+				{
+					tmp[i] = _start[i];
+				}
 				delete[] _start;
 
 				_start = tmp;
@@ -183,17 +204,28 @@ namespace kuto
 			_end++;
 		}
 		//任意位置清除一个数据模拟实现
-		void erase(iterator pos)
+		iterator erase(iterator pos)
 		{
 			assert(pos >= _start);
 			assert(pos < _end);
 			
-			while (pos < _end)
+			iterator it = pos + 1;
+			while (it < _end)
 			{
-				*pos = *(pos + 1);
-				pos++;
+				*(it - 1) = *it;
+				it++;
 			}
 			_end--;
+			return pos;
+		}
+		template <class InputIterator>
+		vector(InputIterator first, InputIterator last)
+		{
+			while (first != last)
+			{
+				push_back(*first);
+				first++;
+			}
 		}
 
 	private:
